@@ -144,7 +144,7 @@ async function query(data) {
     const response = await fetch(
       "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
       {
-        headers: { Authorization: "Bearer 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" },
+        headers: { Authorization: "Bearer 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" },
         method: "POST",
         body: JSON.stringify(data),
       }
@@ -205,51 +205,49 @@ generateButton.addEventListener("click", () => {
 
 <!-- Add this JavaScript code to your HTML template or a separate JS file -->
 <script>
- document.addEventListener("DOMContentLoaded", function () {
-    const playButton = document.getElementById("playbtn");
-    playButton.addEventListener("click", playAudioWithHighlight); // Add the event listener once
-
-    function playAudioWithHighlight() {
-        playButton.removeEventListener("click", playAudioWithHighlight); // Remove the event listener
-        var audio = document.getElementById("voice");
-        var text = document.querySelector('#corrected-text').textContent;
-        var words = text.split(" ");
-        var wordIndex = 0;
-
-        // Get the container for displaying words
-        var wordContainer = document.getElementById("wordContainer");
-        wordContainer.innerHTML = ""; // Clear the container
-
-        // Use the canplaythrough event to ensure the audio is ready to play
-        audio.addEventListener('canplaythrough', function () {
-            var wordSpan = document.getElementById("word");
-            var timer = setInterval(function () {
-                if (wordIndex < words.length) {
-                    wordSpan.textContent = words[wordIndex];
-
-                    // Append the word to the container
-                    var wordDiv = document.createElement("div");
-                    wordDiv.textContent = words[wordIndex];
-                    wordContainer.appendChild(wordDiv);
-
-                    wordIndex++;
-                } else {
-                    clearInterval(timer);
-                }
-            }, audio.duration * 1000 / words.length);
-        });
-
-        audio.onended = function () {
-            var wordSpan = document.getElementById("word");
-            wordSpan.textContent = ""; 
-            playButton.addEventListener("click", playAudioWithHighlight); // Add the event listener back
-        }
-
-        audio.play(); // Play the audio
-    }
-});
-
-</script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const playButton = document.getElementById("playbtn");
+      playButton.addEventListener("click", playAudioWithHighlight);
+  
+      function playAudioWithHighlight() {
+          playButton.removeEventListener("click", playAudioWithHighlight);
+          var audio = document.getElementById("voice");
+          var text = document.querySelector('#corrected-text').textContent;
+          var words = text.split(" ");
+          var wordIndex = 0;
+  
+          var wordContainer = document.getElementById("wordContainer");
+          wordContainer.innerHTML = ""; // Clear the container before starting a new audio playback
+  
+          audio.addEventListener('canplaythrough', function () {
+              var wordSpan = document.getElementById("word");
+              var timer = setInterval(function () {
+                  if (wordIndex < words.length) {
+                      wordSpan.textContent = words[wordIndex];
+  
+                      // Append the word to the container
+                      var wordDiv = document.createElement("div");
+                      wordDiv.textContent = words[wordIndex];
+                      wordContainer.appendChild(wordDiv);
+  
+                      wordIndex++;
+                  } else {
+                      clearInterval(timer);
+  
+                      // Add the event listener back after playback
+                      audio.onended = function () {
+                          wordSpan.textContent = "";
+                          playButton.addEventListener("click", playAudioWithHighlight);
+                      }
+                  }
+              }, audio.duration * 1000 / words.length);
+          });
+  
+          audio.play();
+      }
+  });
+  </script>
+  
 
 </body>
 </html>
