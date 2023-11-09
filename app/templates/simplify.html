@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storyfy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='back/css/text.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='back/css/style_loading.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='back/css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='back/css/drag_and_drop.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='back/css/loading_book.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;700&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="static/back/img/Logo_A2SVv.svg">
+    <style>
+    
+      #wordContainer {
+        background-color: white;
+    display: flex;
+    flex-wrap: wrap;
+    width: 506px;
+    padding: 10px;
+    margin-top: 333px;
+    margin-left: -262px;
+    position: absolute;
+    
+
+        }
+
+        #wordContainer div {
+    white-space: nowrap;
+    padding: 5px;
+    /* border: 1px solid #000; */
+    margin: 5px;
+    color: rgb(0, 0, 0);
+}
+  </style>
+</head>
+<body>
+   
+    <div id="sidebar">
+        {% include 'back_index.html' %}
+    </div>
+    <div id="loading-indicator" class="popup">
+        <div class="popup-content">
+            <div class="wrapper-book">
+                <div class="book-loader-container">
+                  <div class="spine"></div>
+                  <div class="page" style="--page-num: 1"></div>
+                  <div class="page" style="--page-num: 2"></div>
+                  <div class="page" style="--page-num: 3"></div>
+                  <div class="page" style="--page-num: 4"></div>
+                  <div class="page static right"></div>
+                  <div class="page static left"></div>
+                </div>
+              </div>
+              <div class="seconds" style=" margin-left: 258px; margin-top: 186px;position: absolute;">
+            
+                <div id="bar" class="bar-1 animating-1"></div>
+                <p>LOADING . . .</p>
+                </div>
+        </div>
+    </div>
+    <div class="wrapper">
+        <h1 style= " margin-top: -80px;
+        margin-left: 136px;
+        position: absolute;">Storyfy</h1>
+        <form class="paper" action="/simplify" method="post" id="text-form">
+            <textarea id="user_input" name="user_input" placeholder="Enter Your text..." class="text" name="text" rows="4" style="overflow: hidden;
+            word-wrap: break-word;
+            resize: none;
+            height: 158px;
+            margin-top: -21px;
+            margin-left: 30px;">{{generated_text}}</textarea>
+            <br>
+            <input class="btn-correct" type="submit" value="Storyfy" style="margin-left: 227px; margin-top: 10px;position: absolute;">
+        </form>
+        
+    </div>
+
+    {% if corrected_text %}
+    
+    <div id="audioPlayerDiv" hidden></div>
+    <div class="ecriture" style="    margin-top: 255px;
+    margin-left: -634px;
+    z-index: 1;
+    width: 102px;
+    position: absolute;">Your Story : <button id="playbtn" class="icon-button-voice" style="    margin-right: -469px;
+    margin-top: -18px;
+    z-index: 1;
+    width: 765px;
+    position: absolute;"><img src="../static/back/img/voice.svg" alt="Aide"></button></div><br>
+    <input type="hidden" id="hidden-corrected-text" value="{{ corrected_text }}">
+    <span style=" font-family: 'League Spartan', sans-serif;
+
+    margin-right: 246px;
+
+    margin-top: 295px;
+    position: absolute;">Speaking word: <span id="word" style="color: rgb(244, 188, 35);font-family: 'League Spartan', sans-serif;"></span></span>
+    <span id="word" style="color: rgb(94, 244, 35); font-family: 'League Spartan', sans-serif;"></span>
+   
+    <div class="cont" style="display: none;">
+        <p id="corrected-text" class="content-container">{{ corrected_text }}</p>
+        <div id="panel"  class="content-container" style="font-family: 'League Spartan', sans-serif;"></div>
+    </div>
+    <audio id="voice" controls style="display: none;"> 
+      <source src="/play_voice?generated_text={{ corrected_text }}"  type="audio/mpeg">
+    </audio>
+ <img id="generatedImage" alt="Generated Image" style="      width: 30%;
+ float: right;
+ margin-right: -884px;
+ margin-top: 306px;
+ display: block;
+ position: absolute;" />
+ <div id="wordContainer"></div> 
+{% endif %}
+
+    <button class="icon-button" onclick="window.dialog.showModal();"style="z-index: 1;"><img src="../static/back/img/question.png" alt="Aide"></button>
+   
+    <dialog id="dialog" style="position: fixed; top: 20%; left: 35%;">
+        <h2>"These Are Your Guiding Steps for How to Use" 🌟</h2>
+        <p>1. "Unleash Your Thoughts in a Magical Paragraph!" 📝🌟</p>
+        <p>2. "Turn Complexity into Simplicity with a Single Tap!" 🧩</p>
+        <img src="../static/back/img/text_simplification.gif" height="100%" width="100%">
+        <button onclick="window.dialog.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+    <script>
+              const form = document.getElementById("text-form");
+  const loadingIndicator = document.getElementById("loading-indicator");
+
+  form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      loadingIndicator.style.display = "block";
+      form.submit();
+  });
+  
+    </script>
+    
+    
+    <script>
+async function query(data) {
+  try {
+    const response = await fetch(
+      "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
+      {
+        headers: { Authorization: "Bearer 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" },
+        method: "POST",
+        body: JSON.stringify(data),
+      }
+    );
+
+    if (response.ok) {
+      const result = await response.blob();
+      return URL.createObjectURL(result); // Convert blob to object URL
+    } else {
+      throw new Error("Model loading failed.");
+    }
+  } catch (error) {
+    console.error(error);
+    return null; // Return null on failure
+  }
+}
+
+const generateButton = document.getElementById("playbtn");
+const generatedImage = document.getElementById("generatedImage");
+const hiddenCorrectedText = document.getElementById("hidden-corrected-text");
+let modelLoaded = false; // Track if the model is loaded
+
+// Trigger model loading when the page loads
+query({ "inputs": "story time" })
+  .then((imageBlob) => {
+    if (imageBlob) {
+      generatedImage.src = imageBlob;
+      generatedImage.style.display = "block";
+      modelLoaded = true; // Model has successfully loaded
+    }
+  });
+
+function generateImage() {
+  if (modelLoaded) {
+    const userInput = hiddenCorrectedText.value;
+    query({ "inputs": userInput })
+      .then((imageBlob) => {
+        if (imageBlob) {
+          generatedImage.src = imageBlob;
+          generatedImage.style.display = "block";
+        }
+      });
+  } else {
+    console.log("Model is not loaded yet. Please wait.");
+  }
+}
+
+// Automatically generate an image every 3 seconds
+
+setInterval(generateImage, 6000);
+
+generateButton.addEventListener("click", () => {
+  // You can still use the button to manually trigger image generation
+  generateImage();
+});
+
+</script>
+
+<!-- Add this JavaScript code to your HTML template or a separate JS file -->
+<script>
+ document.addEventListener("DOMContentLoaded", function () {
+    const playButton = document.getElementById("playbtn");
+    playButton.addEventListener("click", playAudioWithHighlight); // Add the event listener once
+
+    function playAudioWithHighlight() {
+        playButton.removeEventListener("click", playAudioWithHighlight); // Remove the event listener
+        var audio = document.getElementById("voice");
+        var text = document.querySelector('#corrected-text').textContent;
+        var words = text.split(" ");
+        var wordIndex = 0;
+
+        // Get the container for displaying words
+        var wordContainer = document.getElementById("wordContainer");
+        wordContainer.innerHTML = ""; // Clear the container
+
+        // Use the canplaythrough event to ensure the audio is ready to play
+        audio.addEventListener('canplaythrough', function () {
+            var wordSpan = document.getElementById("word");
+            var timer = setInterval(function () {
+                if (wordIndex < words.length) {
+                    wordSpan.textContent = words[wordIndex];
+
+                    // Append the word to the container
+                    var wordDiv = document.createElement("div");
+                    wordDiv.textContent = words[wordIndex];
+                    wordContainer.appendChild(wordDiv);
+
+                    wordIndex++;
+                } else {
+                    clearInterval(timer);
+                }
+            }, audio.duration * 1000 / words.length);
+        });
+
+        audio.onended = function () {
+            var wordSpan = document.getElementById("word");
+            wordSpan.textContent = ""; 
+            playButton.addEventListener("click", playAudioWithHighlight); // Add the event listener back
+        }
+
+        audio.play(); // Play the audio
+    }
+});
+
+</script>
+
+</body>
+</html>
