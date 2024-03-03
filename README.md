@@ -1,10 +1,11 @@
-<h1 align="center" id="title">CogniPath</h1>
-<h2>Welcome to Cognipath – Your Learning Companion for Students with Learning Difficulties!</h2>
+<h1 align="center" id="title">GreenPath</h1>
+<h2>Welcome to Greenpath - Your Ultimate Destination for Sustainable Living!</h2>
 
 
-<p>Cognipath is more than just a website, it's a dedicated learning platform designed to empower all the students inluding those with mental illness like ADHD and ASD. Our mission is to make education accessible, engaging, and tailored to the unique needs of every learner.</p>
+<p>Greenpath is more than just a website; it's a comprehensive platform dedicated to fostering sustainable living practices. Our mission is to empower individuals to make environmentally conscious choices while embracing creativity and innovation.
+</p>
 
-<img src="https://github.com/Me710/CogniPath-A2SV-GenAI/assets/80206931/f61b7e7d-4359-4b73-a9fc-9d9e70f80ca8" alt="project-screenshot" width=auto height="auto">
+<img src="[https://github.com/Me710/CogniPath-A2SV-GenAI/assets/80206931/f61b7e7d-4359-4b73-a9fc-9d9e70f80ca8](https://i.ibb.co/ZBfp2bg/Screenshot-2024-03-03-083808.png)" alt="project-screenshot" width=auto height="auto">
 
 <h2>🧐 Structure</h2>
 
@@ -42,24 +43,43 @@
 
 
 
-## Detailed description of our Generative AI models
 
-* **Writing Wizard:** Our Writing Wizard feature offers comprehensive support for enhancing writing skills. Users can select a handwritten paragraph and initiate the analysis process by clicking on the "recognize" button. The tool utilizes the Azure Cognitive Services, specifically the Computer Vision API from Microsoft, renowned for its robust functionality in Optical Character Recognition (OCR).Following the recognition phase, the captured paragraph is readily available for further examination. Furthermore, users have the option to access an audio feature, enabling the playback of the text using Facebook's FastSpeech2-en-ljspeech technology. This interactive feature aids students in improving their English speech and enhancing pronunciation. In addition to the automated features, users retain control over their content and can manually edit the paragraph to correct any errors. They may also reference an accompanying image displayed on the right for context. Upon completing these steps, users can finalize their document by clicking the "correct" button, triggering a comprehensive feedback process. This feedback is generated through OpenAI's GPT-3.5 Turbo and provides insights into the strengths of the written work, including sentence structure, linkers, vocabulary usage, and areas for improvement. Users will find this feedback both informative and encouraging as they continue to refine their writing skills with the Writing Wizard feature.
-* **Emotion recognition:** Emotional recognition is essentially a process involving two key components: Firstly, we employ the OpenAI API to generate four sentences related to emotions. Secondly, we utilize a stable-diffusion-xl -base-1.0 approach to produce an image that conveys one of the four generated phrases. The student's task is to correctly identify the correspondence between the image and the phrase. A pop-up message will appear to indicate success or failure in the student's ability to recognize the emotion. This feature is of paramount importance as it enhances emotional skills.
-* **Storyfy:** We developed a new feature called "Storyfy" that allows users to input a word or a complex paragraph, and the system generates a kid-friendly story based on the input by OpenAI: GPT3.5-fast. This feature includes text to speech (SpeechSynthesisUtterance with a male voice) integration and image generation for an interactive storytelling experience.
-* **Chatbot:** The chatbot is a powerful tool in which we used botpress that can help students with ASD in a number of ways. It can provide students with support and guidance, answer their questions, and help them to develop coping mechanisms.
+## Detailed description of our Recycle feature
 
-## How Generative AI Models are Solving the Problem
+Recycle is a revolutionary feature that empowers users to make informed decisions about recycling. Here's how it works:
 
-Generative AI models are solving the problem of helping students with mental illness like ASD in a number of ways.
+- **Upload and Analyze:** Users can upload a photo of an item to Recycle. Recycle utilizes generative AI to analyze the item and provide tailored recycling instructions. For example, it might suggest the most environmentally friendly way to dispose of a water bottle, whether it's plastic, glass, or metal.
 
-* **Essay correction:** Generative AI models can help students with mental illness by providing them with feedback on their essays. This can help students to identify areas where they need to improve their writing skills, and to make their writing more clear, concise, and engaging.
-* **Emotion recognition:** Generative AI models can help students with mental illness to better understand their own emotions, and the emotions of others. This can be helpful for social skills development, and for managing stress and anxiety.
-* **Storyfy:** Generative AI models can help students with mental illness to develop their creativity and imagination. This can be helpful for self-expression, and for developing coping mechanisms for dealing with mental illness.
-* **Chatbot:** The chatbot can provide students with support and guidance, answer their questions, and help them to develop coping mechanisms.
+- **Educational Content:** Recycle also offers educational content to help users understand the importance of recycling and its impact on the environment. Users can learn about recycling best practices and discover creative ways to reduce waste.
 
+- **Interactive Experience:** Recycle provides an interactive experience, allowing users to engage with the recycling process and track their environmental impact over time. With Recycle, users can make a meaningful difference in protecting our planet for future generations.
 
-Generative AI models are a powerful tool that can be used to help students with mental illness in a number of ways. By providing students with feedback on their writing, helping them to better understand emotions, and developing their creativity, generative AI models can help students to thrive in school and in life.
+Join us in embracing sustainable living with Recycle and take the first step towards a greener future with Greenpath.
+
+## Detailed description of our Foody feature
+
+Foody is a revolutionary feature that empowers users to discover delicious recipes tailored to their ingredients. Here's how it works:
+
+- **Ingredient Analysis:** Users can input their ingredients into Foody, and it will generate a variety of recipe options based on what they have on hand. Foody also offers nutritional information for each recipe, helping users make informed decisions about their meals.
+
+- **Lowest Price Recipes:** Foody highlights the lowest price recipes for users, helping them minimize food waste and save money on groceries. With Foody, users can make the most of their ingredients while reducing their environmental footprint.
+
+- **Interactive Cooking Experience:** Foody provides an interactive cooking experience, complete with step-by-step instructions and visual aids to guide users through the recipe. Whether you're a novice cook or a seasoned chef, Foody makes cooking fun and accessible for everyone.
+
+Join us in exploring the culinary delights of Foody and make every meal a sustainable and delicious experience with Greenpath.
+
+## Detailed description of our Donation feature
+
+The Donation feature is a heartwarming addition to Greenpath, connecting those with items to spare to those in need. Here's how it works:
+
+- **Donate and Receive:** Users can donate items they no longer need through the Donation feature. These items are then made available to those in need, creating a mutually beneficial exchange that promotes generosity and kindness.
+
+- **Browse and Request:** Users in need can browse the Donation gallery to find items they require. They can then request these items through the platform, and donors can choose to fulfill these requests based on availability.
+
+- **Community Support:** The Donation feature fosters a sense of community and solidarity, bringing people together to support one another in times of need. With Donation, users can make a positive impact on the lives of others while decluttering their own spaces.
+
+Join us in spreading kindness and making a difference with the Donation feature on Greenpath.
+
 
 
 <h2>🛠️ Installation Steps:</h2>
@@ -96,6 +116,7 @@ Technologies used in the project:
 
 *   Flask
 *   Jinja2
-*   OpenAI API (GPT-3.5 Turbo)
-*   Microsoft Trocr (Optical Character Recognition)
-*   OpenCV-Python
+*   OpenAI API (GPT-4)
+*   OpenAI API (DALLE 3) 
+*   OpenAI API (GPT4-V) 
+  
