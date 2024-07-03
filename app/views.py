@@ -1,31 +1,37 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-import openai
-# Python modules
-import os, logging 
-import random
-# Flask modules
-from flask               import render_template, request, url_for, redirect, send_from_directory,jsonify,session
-from flask_login         import login_user, logout_user, current_user, login_required
-from werkzeug.exceptions import HTTPException, NotFound, abort
-from jinja2              import TemplateNotFound
-
-# App modules
-from app        import app, lm, db, bc
-from app.models import *
-
-#from app.forms  import LoginForm, RegisterForm
-import requests
+# Imports
 import os
-
+from flask import render_template, request, url_for, redirect, send_from_directory, jsonify, session
+from flask_login import login_user, logout_user, current_user, login_required
+from werkzeug.exceptions import HTTPException, NotFound, abort
+from jinja2 import TemplateNotFound
+from openai import AzureOpenAI
+from app import app, lm, db, bc
+from app.models import *
+import requests
 import numpy as np
 from dotenv import load_dotenv
 import base64
 import azure.cognitiveservices.speech as speechsdk
+import time
+
+from array import array
+from azure.cognitiveservices.vision.computervision import ComputerVisionClient
+from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
+from azure.cognitiveservices.vision.computervision.models import VisualFeatureTypes
+from msrest.authentication import CognitiveServicesCredentials
+from io import BytesIO
+from flask import send_file
+from azure.cognitiveservices.speech import SpeechSynthesizer
+from azure.cognitiveservices.speech.audio import AudioConfig
+import json
+import random
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Azure OpenAI Client Initialization
+client = AzureOpenAI(
+  api_key="1314c89d0d7647c495a818998dfedf96",
+  api_version="2024-02-01",
+  azure_endpoint="https://cognipath.openai.azure.com/"
+)
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
 API_URL_trocr="https://api-inference.huggingface.co/models/microsoft/trocr-large-handwritten"
 headers = {"Authorization": "Bearer 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"}
@@ -39,13 +45,14 @@ from io import BytesIO
 from flask import send_file
 from azure.cognitiveservices.speech import SpeechSynthesizer
 from azure.cognitiveservices.speech.audio import AudioConfig
-API_KEY = "a41984e997a74b999e979b08007ec70a"
-ENDPOINT = "https://francecentral.api.cognitive.microsoft.com/"
-computervision_client = ComputerVisionClient(ENDPOINT, CognitiveServicesCredentials(API_KEY))
+CV_API_KEY = os.getenv("CV_API_KEY")
+SP_API_KEY = "1314c89d0d7647c495a818998dfedf96"
+ENDPOINT = "https://cog.cognitiveservices.azure.com/"
+computervision_client = ComputerVisionClient(ENDPOINT, CognitiveServicesCredentials("c6875d143a96465cad2ba687d274c223"))
 import json
 import random
 # Configure Azure Cognitive Services Speech SDK
-speech_config = speechsdk.SpeechConfig("14cee8f9e1fe4d01882ba8a65eb6923f", "francecentral")
+speech_config = speechsdk.SpeechConfig("fd1c98be42a2404d91f56ab21507bd1c", "francecentral")
 audio_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True)
 speech_config.speech_synthesis_voice_name = 'en-US-AnaNeural'
 speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config, audio_config=audio_config)
@@ -284,8 +291,8 @@ Remember, every great writer started somewhere, and we believe in your potential
 ]
     try:
         # Make the OpenAI chat completion request
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+        response = client.chat.completions.create(
+            model='cog',  # use the correct model name or deployment name
             messages=messages,
             temperature=0,
             max_tokens=256,
@@ -293,8 +300,7 @@ Remember, every great writer started somewhere, and we believe in your potential
             frequency_penalty=0,
             presence_penalty=0
         )
-
-        assistant_reply = response.choices[0].message["content"]
+        assistant_reply = response.choices[0].message.content
         print(assistant_reply)
 
         # Split the response into lines
@@ -341,7 +347,6 @@ def simplify():
     if request.method == "GET":
         return render_template("simplify.html")
 
-   
     user_input = request.form["user_input"]
     generated_text = user_input  # Use the user-provided text as input
 
@@ -358,8 +363,8 @@ def simplify():
     ]
 
     # Make the OpenAI chat completion request
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+    response = client.chat.completions.create(
+        model='cog',  # Use the correct model name
         messages=messages,
         temperature=0,
         max_tokens=256,
@@ -368,9 +373,11 @@ def simplify():
         presence_penalty=0
     )
 
-    assistant_reply = response.choices[0].message["content"]
+    assistant_reply = response.choices[0].message.content
+    print(assistant_reply)
 
     return render_template("simplify.html", generated_text=generated_text, corrected_text=assistant_reply)
+
 @app.route("/play_voice", methods=["GET"])
 def play_voice():
     generated_text = request.args.get("generated_text")
@@ -472,15 +479,15 @@ def generate_emotion_recognition_text(prompts):
     try:
         # Generate text for each prompt and append it to the results array
         for prompt in prompts:
-            response = openai.Completion.create(
-                engine="text-davinci-002",
+            response = client.chat.completions.create(
+                model='cog',  # use the correct model name or deployment name
                 prompt=prompt,
                 max_tokens=50  # Adjust the max tokens as needed
             )
             result_text = response.choices[0].text.strip()
             results.append(result_text)
-    except openai.error.RateLimitError as e:
-        print(f"Rate limit reached. Retrying in {retry_interval} seconds.")
+    except Exception as e:  # Catch all exceptions
+        print(f"An error occurred: {str(e)}")
         time.sleep(retry_interval)
 
     
