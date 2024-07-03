@@ -96,6 +96,6 @@ Technologies used in the project:
 
 *   Flask
 *   Jinja2
-*   OpenAI API (GPT-3.5 Turbo)
+*   OpenAI API (GPT-4o)
 *   Microsoft Trocr (Optical Character Recognition)
 *   OpenCV-Python
